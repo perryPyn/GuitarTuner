@@ -169,18 +169,3 @@ Le comportement dynamique du circuit a été validé par **simulation comporteme
 - 🔁 Enfin, le retour à zéro de `i_mesure` déclenche l'état `SAUVEGARDE` (activation de `o_charg_reg`), bouclant parfaitement le cycle avant de retourner au repos.
 
 ---
-
-## 3. Conclusion
-
-L'implémentation en VHDL respecte scrupuleusement les règles de conception synchrone enseignées :
-
-- ✅ séparation stricte de la logique séquentielle et combinatoire ;
-- ✅ absence de latches parasites grâce aux valeurs par défaut.
-
-Les simulations prouvent la **conformité fonctionnelle** du séquenceur et de l'ensemble de la chaîne de mesure de l'accordeur, ouvrant la voie au **placement-routage sur la cible FPGA**.
-
----
-
-<p align="center">
-  <sub>Projet réalisé dans le cadre d'un cours de conception numérique — © Youssef, Jula, Lucas</sub>
-</p>
