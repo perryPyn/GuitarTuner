@@ -1,77 +1,186 @@
-# 🎸 Projet FPGA : Accordeur Numérique pour Guitare
+# 🎸 Accordeur Numérique pour Guitare — Projet FPGA
 
-Bienvenue sur le dépôt du projet d'électronique numérique de conception d'un **accordeur numérique pour guitare** réalisé dans le cadre du module FPGA à l'ENSEA.
+[![VHDL](https://img.shields.io/badge/VHDL-Synth%C3%A9tisable-orange)]()
+[![ModelSim](https://img.shields.io/badge/Simulation-ModelSim-blue)]()
+[![Status](https://img.shields.io/badge/Statut-Valid%C3%A9-brightgreen)]()
 
----
+> Système matériel synchrone permettant de mesurer et d'afficher l'écart relatif entre la fréquence d'une corde de guitare jouée par l'utilisateur (`FreqVar`) et une fréquence de référence stockée en mémoire (`FreqRef`).
 
-## 📌 Partie 1 : Présentation Générale du Projet
-
-### Objectif et Contexte
-L'objectif de ce projet est de concevoir un système matériel synchrone capable de mesurer et d'afficher l'écart relatif entre la fréquence d'une corde de guitare jouée par l'utilisateur (`FreqVar`) et une fréquence de référence stockée en mémoire (`FreqRef`). 
-
-Dans les conditions nominales d'utilisation, l'écart de fréquence entre les deux signaux reste faible et ne dépasse jamais $\pm 9\%$. Le système s'auto-calibre pour restituer cet écart en pourcentage sur un afficheur numérique avec signe.
-
-### Architecture Globale du Dispositif
-Le système repose sur une architecture synchrone cadencée par l'horloge de référence `FreqRef` et s'articule autour de quatre grands blocs matériels interconnectés :
-1. **Le Diviseur :** Génère une fenêtre temporelle active (`Mesure`) d'une durée exacte de $100 \cdot T_{Var}$.
-2. **Le Séquenceur (FSM) :** Le "chef d'orchestre" qui pilote l'enchaînement des opérations en fonction de l'état de la mesure et du compteur.
-3. **Le Compteur Réversible :** Un compteur synchrone initialisé à la valeur 100, qui décompte puis recompte selon le chronomètre de mesure.
-4. **Le Registre et l'Afficheur :** Mémorise le score final et le sens d'évolution pour l'afficher en temps réel.
+**Réalisé par :** Youssef, Jula, Lucas
 
 ---
 
-## 🔬 Partie 2 : Compte-Rendu Technique & Analyse Détaillée
+## 📑 Table des matières
 
-### 1. Principe de la Mesure et Fondements Mathématiques
-
-Soient $T_{Ref}$ et $T_{Var}$ les périodes respectives du signal de référence et du signal de la corde jouée. 
-Le diviseur délivre un signal `Mesure` actif pendant une durée de $100 \cdot T_{Var}$. Le compteur réversible, initialisé à l'équivalent décimal $100$, évolue pendant cette fenêtre. 
-
-Si $n_f$ représente l'état atteint par le compteur et $SensCroiss_f$ la sélection du sens d'évolution en fin d'activité de `Mesure` ($0$ : décomptage, $1$ : comptage), le nombre d'états parcourus s'exprime par :
-$$100 \cdot T_{Var} = \left[ 100 + (-1)^{SensCroiss_f} \cdot n_f \right] T_{Ref}$$
-
-La valeur de l'écart relatif en pourcentage est ainsi donnée par :
-$$\text{Écart} = n_f \cdot \left\vert{} \frac{T_{Var} - T_{Ref}}{T_{Ref}} \right\vert{} \quad \text{avec son signe donné par } SensCroiss_f$$
+- [1. Présentation générale du projet](#1-présentation-générale-du-projet)
+  - [Objectif et contexte](#objectif-et-contexte)
+  - [Architecture globale du dispositif](#architecture-globale-du-dispositif)
+- [2. Compte-rendu technique — Étude et conception du séquenceur](#2-compte-rendu-technique--étude-et-conception-du-séquenceur)
+  - [2.1 Graphe d'état du séquenceur](#21-établissement-du-graphe-détat-du-séquenceur)
+  - [2.2 Synthèse et schéma de réalisation](#22-synthèse-et-schéma-de-réalisation-du-séquenceur)
+  - [2.3 Validation et simulation (ModelSim)](#23-validation-et-simulation-modelsim)
+- [3. Conclusion](#3-conclusion)
 
 ---
 
-### 2. Description Détaillée des Sous-Ensembles
+## 1. Présentation générale du projet
 
-#### A. Le Diviseur de Fréquence
-* **Rôle :** Produit le signal rectangulaire `Mesure` périodique.
-* **Fonctionnement :** Il compte les fronts montants du signal de la corde `FreqVar`. La sortie `Mesure` est positionnée à `1` pendant 100 périodes de `FreqVar`, puis à `0` le reste du temps pour permettre la mémorisation et l'affichage.
+### Objectif et contexte
 
-#### B. Le Séquenceur (Machine d'États FSM)
-Le séquenceur est une machine synchrone à 4 états gérée par un processus séquentiel (sur front montant de `FreqRef`) et un processus combinatoire :
-1. **`ATTENTE`** : Système au repos. `o_init_compt = '1'`. Attend le front montant de `i_mesure`.
-2. **`DECOMPTAGE`** : Dès que `i_mesure = '1'`, le compteur décrémente (`o_valid_compt = '1'`, `o_sens_croiss = '0'`). Si le compteur atteint zéro (`i_etat_0 = '1'`), la machine bascule en comptage.
-3. **`COMPTAGE`** : Le compteur repart à la hausse (`o_sens_croiss = '1'`) jusqu'à la fin de la fenêtre de mesure.
-4. **`SAUVEGARDE`** : À la désactivation de `i_mesure`, le registre fige la valeur (`o_charg_reg = '1'`) avant de retourner dans l'état `ATTENTE`.
+L'objectif de ce projet est de concevoir un système matériel synchrone capable de mesurer et d'afficher l'écart relatif entre la fréquence d'une corde de guitare jouée par l'utilisateur (`FreqVar`) et une fréquence de référence stockée en mémoire (`FreqRef`).
 
-#### C. Le Compteur Réversible
-* Constitué d'un additionneur/soustracteur synchrone de 7 bits paramétré via la bibliothèque standard `ieee.numeric_std`.
-* Il intègre les commandes `InitCompt` (chargement de la valeur 100), `ValidCompt` (validation du comptage/décomptage) et `SensCroiss` (choix du sens d'incrémentation).
-* La sortie combinatoire `Etat_0` bascule à `1` dès que la valeur interne atteint zéro.
+### Architecture globale du dispositif
 
-#### D. Le Registre de Mémorisation (PIPO)
-* Registre synchrone à chargement parallèle commandé par `ChargReg`. Il capture les 4 bits de poids faible de l'écart ainsi que le bit de signe, garantissant un affichage stable et sans scintillement.
+Le système repose sur une architecture synchrone cadencée par l'horloge de référence `FreqRef`. La structure interne du dispositif s'articule autour de **quatre grands blocs matériels** interconnectés :
 
----
+<p align="center">
+  <img src="Structure.png" alt="Structure interne du dispositif" width="600"/>
+</p>
 
-### 3. Validation et Simulation (ModelSim)
-
-Le comportement dynamique du circuit a été validé par simulation comportementale sous ModelSim.
-
-![Chronogramme de simulation ModelSim du séquenceur](ModelSim.png)
-
-* **Analyse du chronogramme :** 
-  * Le signal de reset asynchrone `i_rst_n` (en haut, cyan) initialise proprement le système dans l'état `ATTENTE`.
-  * Dès l'activation de `i_mesure` (orange), la machine passe de `ATTENTE` à `DECOMPTAGE`.
-  * L'impulsion sur `i_etat_0` déclenche la transition vers `COMPTAGE` (inversion du sens).
-  * Enfin, le retour à zéro de `i_mesure` déclenche l'état `SAUVEGARDE` (activation de `o_charg_reg`), bouclant parfaitement le cycle avant de retourner au repos.
+| Bloc | Rôle |
+|---|---|
+| 🔹 **Diviseur** | Génère une fenêtre temporelle active (`Mesure`) d'une durée exacte de 100 périodes de `FreqVar`. |
+| 🔹 **Séquenceur** | Machine d'états finis (FSM) qui pilote l'enchaînement des opérations en fonction de l'état de la mesure et du compteur. |
+| 🔹 **Compteur réversible** | Initialisé à la valeur décimale 100, il décompte puis recompte selon le chronomètre de mesure. |
+| 🔹 **Registre et afficheur** | Mémorise le score final et le sens d'évolution pour restituer l'écart sur un afficheur signé. |
 
 ---
 
-### 4. Conclusion
+## 2. Compte-rendu technique — Étude et conception du séquenceur
 
-L'implémentation en VHDL respecte scrupuleusement les règles de conception synchrone enseignées (séparation stricte de la logique séquentielle et combinatoire, absence de loutres/latches parasites grâce aux valeurs par défaut). Les simulations prouvent la conformité fonctionnelle du séquenceur et de l'ensemble de la chaîne de mesure de l'accordeur, ouvrant la voie au placement-routage sur la cible FPGA.
+Cette section détaille la méthodologie suivie pour la conception, la modélisation et la validation du séquenceur, en respectant rigoureusement l'ordre des questions du cahier des charges.
+
+### 2.1 Établissement du graphe d'état du séquenceur
+
+Le comportement du séquenceur est modélisé par une **machine d'états finis synchrone** comportant quatre états principaux :
+
+| État | Description |
+|---|---|
+| **ATTENTE** | Au repos, initialise le compteur et attend l'activation de la fenêtre `Mesure`. |
+| **DECOMPTAGE** | Dès que `Mesure` passe à l'état haut, le compteur décrémente à chaque front d'horloge. Si l'état zéro est atteint, la machine bascule en comptage. |
+| **COMPTAGE** | Le compteur repart à la hausse pour mesurer l'écart positif restant. |
+| **SAUVEGARDE** | À la fin de la fenêtre de mesure, le résultat est figé dans le registre avant de retourner à l'état `ATTENTE`. |
+
+<p align="center">
+  <img src="Sequenc.png" alt="Graphe d'états du séquenceur" width="600"/>
+</p>
+
+### 2.2 Synthèse et schéma de réalisation du séquenceur
+
+L'implémentation matérielle en VHDL sépare strictement :
+- la **logique séquentielle**, synchronisée sur le front montant de l'horloge `i_freq_ref` ;
+- la **logique combinatoire**, via un bloc `case` avec des valeurs par défaut pour éviter les latches parasites.
+
+<details>
+<summary>📄 Voir le code VHDL du séquenceur (<code>sequencer.vhd</code>)</summary>
+
+```vhdl
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity sequencer is
+    port (
+        i_freq_ref    : in  std_logic;
+        i_rst_n       : in  std_logic;
+        i_mesure      : in  std_logic;
+        i_etat_0      : in  std_logic;
+        o_init_compt  : out std_logic;
+        o_valid_compt : out std_logic;
+        o_sens_croiss : out std_logic;
+        o_charg_reg   : out std_logic
+    );
+end entity sequencer;
+
+architecture rtl of sequencer is
+    type state_type is (ATTENTE, DECOMPTAGE, COMPTAGE, SAUVEGARDE);
+    signal current_state, next_state : state_type;
+begin
+
+    -- Processus séquentiel : mise à jour de l'état sur front d'horloge
+    process(i_freq_ref, i_rst_n)
+    begin
+        if i_rst_n = '0' then
+            current_state <= ATTENTE;
+        elsif rising_edge(i_freq_ref) then
+            current_state <= next_state;
+        end if;
+    end process;
+
+    -- Processus combinatoire : calcul de l'état futur et des sorties
+    process(current_state, i_mesure, i_etat_0)
+    begin
+        o_init_compt  <= '0';
+        o_valid_compt <= '0';
+        o_sens_croiss <= '0';
+        o_charg_reg   <= '0';
+        next_state    <= current_state;
+
+        case current_state is
+            when ATTENTE =>
+                o_init_compt <= '1';
+                if i_mesure = '1' then
+                    next_state <= DECOMPTAGE;
+                end if;
+
+            when DECOMPTAGE =>
+                o_valid_compt <= '1';
+                o_sens_croiss <= '0';
+                if i_mesure = '0' then
+                    next_state <= SAUVEGARDE;
+                elsif i_etat_0 = '1' then
+                    next_state <= COMPTAGE;
+                end if;
+
+            when COMPTAGE =>
+                o_valid_compt <= '1';
+                o_sens_croiss <= '1';
+                if i_mesure = '0' then
+                    next_state <= SAUVEGARDE;
+                end if;
+
+            when SAUVEGARDE =>
+                o_charg_reg <= '1';
+                next_state  <= ATTENTE;
+
+            when others =>
+                next_state <= ATTENTE;
+        end case;
+    end process;
+
+end architecture rtl;
+```
+
+</details>
+
+### 2.3 Validation et simulation (ModelSim)
+
+Le comportement dynamique du circuit a été validé par **simulation comportementale sous ModelSim**.
+
+<p align="center">
+  <img src="ModelSim.png" alt="Chronogramme de simulation ModelSim du séquenceur" width="700"/>
+</p>
+
+**Analyse du chronogramme :**
+
+- 🟦 Le signal de reset asynchrone `i_rst_n` (en haut, cyan) initialise proprement le système dans l'état `ATTENTE`.
+- 🟧 Dès l'activation de `i_mesure` (orange), la machine passe de `ATTENTE` à `DECOMPTAGE`.
+- ⚡ L'impulsion sur `i_etat_0` déclenche la transition vers `COMPTAGE` (inversion du sens).
+- 🔁 Enfin, le retour à zéro de `i_mesure` déclenche l'état `SAUVEGARDE` (activation de `o_charg_reg`), bouclant parfaitement le cycle avant de retourner au repos.
+
+---
+
+## 3. Conclusion
+
+L'implémentation en VHDL respecte scrupuleusement les règles de conception synchrone enseignées :
+
+- ✅ séparation stricte de la logique séquentielle et combinatoire ;
+- ✅ absence de latches parasites grâce aux valeurs par défaut.
+
+Les simulations prouvent la **conformité fonctionnelle** du séquenceur et de l'ensemble de la chaîne de mesure de l'accordeur, ouvrant la voie au **placement-routage sur la cible FPGA**.
+
+---
+
+<p align="center">
+  <sub>Projet réalisé dans le cadre d'un cours de conception numérique — © Youssef, Jula, Lucas</sub>
+</p>
