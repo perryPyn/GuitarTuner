@@ -1,0 +1,80 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity counter_tb is
+end entity counter_tb;
+
+architecture tb of counter_tb is
+  -- Reset
+    signal i_rst_n : in std_logic
+  -- Inputs
+    signal i_init_cnt : in std_logic;
+    signal i_valid_cnt : in std_logic;
+    signal i_etat_0 : in std_logic;
+    signal i_sens_crois : in std_logic;
+    signal i_freq_ref : in std_logic;
+  -- Outputs
+    signal o_data : out std_logic_vector(3 downto 0);
+  -- Signals
+    -- constant c_max : signed := 100;
+    -- constant h_min : signed := -100;
+    -- signal r_cnt : natural range h_min to h_max := 0;
+    signal r_cnt : natural range -100 to 100 := 0;
+  -- Clock
+    signal isDone : boolean := false;
+
+begin
+  
+  uut : entity work.counter
+    port map (
+      i_rst_n => i_rst_n,
+      i_init_cnt => i_init_cnt,
+      i_valid_cnt => i_valid_cnt,
+      i_etat_0 => i_etat_0,
+      i_sens_crois => i_sens_crois,
+      i_freq_ref => i_freq_ref,
+      o_data => o_data,
+
+      r_cnt => r_cnt
+    );
+
+    clock: process
+    begin
+      i_freq_ref <= '1';
+      wait for 4500 ns;
+      i_freq_ref <= '0';
+      wait for 4500 ns;
+
+      if (isDone) then
+        wait;
+      end if;
+    end process clock;
+  
+    process
+    begin
+      i_rst_n <= '0';
+      wait for rising_edge(i_freq_ref);
+      i_rst_n <= '1';
+      wait for rising_edge(i_freq_ref);
+
+      i_init_cnt <= '1'; -- Init of cnt
+      wait for rising_edge(i_freq_ref);
+
+      i_init_cnt <= '0'; -- It is init so next step is incr
+      wait for rising_edge(i_freq_ref);
+
+      i_valid_cnt <= '1';
+      wait for rising_edge(i_freq_ref);
+
+      i_sens_crois <= '0';
+      wait for rising_edge(i_freq_ref);
+ 
+      for i in 0 to 200 loop
+          wait until rising_edge(i_clk);
+      end loop;
+
+      isDone <= '1';
+      wait;
+    end process;
+
+end architecture tb;
