@@ -34,7 +34,7 @@ L'objectif de ce projet est de concevoir un système matériel synchrone capable
 Le système repose sur une architecture synchrone cadencée par l'horloge de référence `FreqRef`. La structure interne du dispositif s'articule autour de **quatre grands blocs matériels** interconnectés :
 
 <p align="center">
-  <img src="Structure.png" alt="Structure interne du dispositif" width="600"/>
+  <img src="images/Structure.png" alt="Structure interne du dispositif" width="600"/>
 </p>
 
 | Bloc | Rôle |
@@ -62,7 +62,7 @@ Le comportement du séquenceur est modélisé par une **machine d'états finis s
 | **SAUVEGARDE** | À la fin de la fenêtre de mesure, le résultat est figé dans le registre avant de retourner à l'état `ATTENTE`. |
 
 <p align="center">
-  <img src="Sequenc.png" alt="Graphe d'états du séquenceur" width="600"/>
+  <img src="images/Sequenc.png" alt="Graphe d'états du séquenceur" width="500"/>
 </p>
 
 ### 2.2 Synthèse et schéma de réalisation du séquenceur
@@ -158,7 +158,7 @@ end architecture rtl;
 Le comportement dynamique du circuit a été validé par **simulation comportementale sous ModelSim**.
 
 <p align="center">
-  <img src="ModelSim.png" alt="Chronogramme de simulation ModelSim du séquenceur" width="700"/>
+  <img src="images/ModelSim.png" alt="Chronogramme de simulation ModelSim du séquenceur" width="700"/>
 </p>
 
 **Analyse du chronogramme :**
@@ -169,3 +169,18 @@ Le comportement dynamique du circuit a été validé par **simulation comporteme
 - 🔁 Enfin, le retour à zéro de `i_mesure` déclenche l'état `SAUVEGARDE` (activation de `o_charg_reg`), bouclant parfaitement le cycle avant de retourner au repos.
 
 ---
+
+## 3. Conclusion
+
+L'implémentation en VHDL respecte scrupuleusement les règles de conception synchrone enseignées :
+
+- ✅ séparation stricte de la logique séquentielle et combinatoire ;
+- ✅ absence de latches parasites grâce aux valeurs par défaut.
+
+Les simulations prouvent la **conformité fonctionnelle** du séquenceur et de l'ensemble de la chaîne de mesure de l'accordeur, ouvrant la voie au **placement-routage sur la cible FPGA**.
+
+---
+
+<p align="center">
+  <sub>Projet réalisé dans le cadre d'un cours de conception numérique — © Youssef, Jula, Lucas</sub>
+</p>
