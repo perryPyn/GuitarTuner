@@ -22,11 +22,11 @@
   - [1.5 Contraintes de réalisation](#15-contraintes-de-réalisation)
   - [1.6 Plan de travail](#16-plan-de-travail)
 - [2. Réponses au cahier des charges](#2-réponses-au-cahier-des-charges)
-  - [2.1 ✅ Graphe d'état du séquenceur](#21--graphe-détat-du-séquenceur)
-  - [2.2 ✅ Synthèse et schéma du séquenceur](#22--synthèse-et-schéma-de-réalisation-du-séquenceur)
-  - [2.3 ⏳ Schéma du diviseur](#23--schéma-du-diviseur)
-  - [2.4 ⏳ Schéma du compteur réversible](#24--schéma-du-compteur-réversible)
-  - [2.5 ⏳ Schéma du registre](#25--schéma-du-registre)
+  - [2.1  Graphe d'état du séquenceur](#21--graphe-détat-du-séquenceur)
+  - [2.2  Synthèse et schéma du séquenceur](#22--synthèse-et-schéma-de-réalisation-du-séquenceur)
+  - [2.3  Schéma du diviseur](#23--schéma-du-diviseur)
+  - [2.4  Schéma du compteur réversible](#24--schéma-du-compteur-réversible)
+  - [2.5  Schéma du registre](#25--schéma-du-registre)
 
 ---
 
