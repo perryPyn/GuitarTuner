@@ -5,7 +5,7 @@ entity divider is
 
     port(
         
-        i_reset : in std_logic; 
+        i_reset_n : in std_logic; 
         i_freqVar : in std_logic;
 
         
@@ -22,9 +22,9 @@ architecture rtl of divider is
     --signal r_count : positive := 0;
 
 begin 
-    process(i_freqVar, i_reset)
+    process(i_freqVar, i_reset_n)
     begin
-        if (i_reset ='0') then
+        if (i_reset_n ='0') then
             o_measure <= '0';
             r_count <= 0;
 

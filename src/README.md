@@ -1,9 +1,9 @@
 # 🎸 JOS4 — Accordeur Numérique pour Guitare
 
-[![VHDL](https://img.shields.io/badge/VHDL-Synth%C3%A9tisable-orange)]()
-[![ModelSim](https://img.shields.io/badge/Simulation-ModelSim-blue)]()
-[![Année](https://img.shields.io/badge/Ann%C3%A9e-2025--2026-lightgrey)]()
-[![Statut](https://img.shields.io/badge/Avancement-En%20cours-yellow)]()
+[![VHDL](https://img.shields.io/badge/VHDL-Synth%C3%A9tisable-orange)](<>)
+[![ModelSim](https://img.shields.io/badge/Simulation-ModelSim-blue)](<>)
+[![Année](https://img.shields.io/badge/Ann%C3%A9e-2025--2026-lightgrey)](<>)
+[![Statut](https://img.shields.io/badge/Avancement-En%20cours-yellow)](<>)
 
 > Projet 2ème année — Concevoir un appareil d'accord musical pour guitare, capable de mesurer et d'afficher l'écart relatif entre la fréquence d'une corde jouée (`FreqVar`) et une fréquence de référence stockée en mémoire (`FreqRef`).
 
@@ -22,11 +22,11 @@
   - [1.5 Contraintes de réalisation](#15-contraintes-de-réalisation)
   - [1.6 Plan de travail](#16-plan-de-travail)
 - [2. Réponses au cahier des charges](#2-réponses-au-cahier-des-charges)
-  - [2.1  Graphe d'état du séquenceur](#21--graphe-détat-du-séquenceur)
-  - [2.2  Synthèse et schéma du séquenceur](#22--synthèse-et-schéma-de-réalisation-du-séquenceur)
-  - [2.3  Schéma du diviseur](#23--schéma-du-diviseur)
-  - [2.4  Schéma du compteur réversible](#24--schéma-du-compteur-réversible)
-  - [2.5  Schéma du registre](#25--schéma-du-registre)
+  - [2.1 Graphe d'état du séquenceur](#21--graphe-détat-du-séquenceur)
+  - [2.2 Synthèse et schéma du séquenceur](#22--synthèse-et-schéma-de-réalisation-du-séquenceur)
+  - [2.3 Schéma du diviseur](#23--schéma-du-diviseur)
+  - [2.4 Schéma du compteur réversible](#24--schéma-du-compteur-réversible)
+  - [2.5 Schéma du registre](#25--schéma-du-registre)
 
 ---
 
@@ -46,14 +46,14 @@ Il s'agit de concevoir un appareil d'accord musical de note pour guitare, réali
 
 L'accordage standard d'une guitare à six cordes, de la plus grave à la plus aiguë (de 6 à 1), est **Mi La Ré Sol Si Mi** (E A D G B E). Les cordes consécutives sont accordées à la quarte juste, sauf entre la 3ᵉ et la 2ᵉ corde où c'est une tierce majeure.
 
-| Corde | Note | Notation anglophone | Fréquence |
-|---|---|---|---|
-| 1 (la plus fine) | Mi | E | 329,6 Hz |
-| 2 | Si | B | 246,88 Hz |
-| 3 | Sol | G | 196,0 Hz |
-| 4 | Ré | D | 146,79 Hz |
-| 5 | La | A | 110,0 Hz |
-| 6 (la plus grosse) | Mi | E | 82,4 Hz |
+| Corde              | Note | Notation anglophone | Fréquence |
+| ------------------ | ---- | ------------------- | --------- |
+| 1 (la plus fine)   | Mi   | E                   | 329,6 Hz  |
+| 2                  | Si   | B                   | 246,88 Hz |
+| 3                  | Sol  | G                   | 196,0 Hz  |
+| 4                  | Ré   | D                   | 146,79 Hz |
+| 5                  | La   | A                   | 110,0 Hz  |
+| 6 (la plus grosse) | Mi   | E                   | 82,4 Hz   |
 
 ### 1.3 Principe de fonctionnement
 
@@ -83,15 +83,15 @@ Le signe de l'écart est donné par `SensCroiss`.
 Le système repose sur une architecture synchrone cadencée par l'horloge de référence `FreqRef`. Le séquenceur, le compteur réversible et le registre partagent ce même signal d'horloge : leur fonctionnement est **synchrone**.
 
 <p align="center">
-  <img src="images/Structure.png" alt="Structure interne du dispositif" width="600"/>
+  <img src="img/Structure.png" alt="Structure interne du dispositif" width="600"/>
 </p>
 
-| Bloc | Rôle |
-|---|---|
-| 🔹 **Diviseur** | Génère, de façon périodique et permanente, le signal `Mesure` à partir de l'horloge formée par `FreqVar`. `Mesure` est actif pendant 100 périodes de cette horloge, et inactif pendant un nombre quelconque de périodes. |
-| 🔹 **Séquenceur** | FSM qui pilote l'enchaînement des opérations en fonction de l'état de `Mesure` et du compteur. |
-| 🔹 **Compteur réversible** | Compteur synchrone, réversible, en code binaire naturel. Initialisé à l'état d'équivalent décimal 100, il décompte jusqu'à l'état 0 puis recompte, tant que `Mesure` est actif. |
-| 🔹 **Registre + Afficheur** | Le registre mémorise le sens (`SensCroiss`) et la valeur de l'écart (4 bits de poids faible du compteur) au chargement. L'afficheur (7 segments + signe) reflète en permanence cette information. |
+| Bloc                        | Rôle                                                                                                                                                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 🔹 **Diviseur**             | Génère, de façon périodique et permanente, le signal `Mesure` à partir de l'horloge formée par `FreqVar`. `Mesure` est actif pendant 100 périodes de cette horloge, et inactif pendant un nombre quelconque de périodes. |
+| 🔹 **Séquenceur**           | FSM qui pilote l'enchaînement des opérations en fonction de l'état de `Mesure` et du compteur.                                                                                                                           |
+| 🔹 **Compteur réversible**  | Compteur synchrone, réversible, en code binaire naturel. Initialisé à l'état d'équivalent décimal 100, il décompte jusqu'à l'état 0 puis recompte, tant que `Mesure` est actif.                                          |
+| 🔹 **Registre + Afficheur** | Le registre mémorise le sens (`SensCroiss`) et la valeur de l'écart (4 bits de poids faible du compteur) au chargement. L'afficheur (7 segments + signe) reflète en permanence cette information.                        |
 
 `Etat_0` est actif dès que le compteur atteint l'état 0, quels que soient `InitCompt`, `ValidCompt` et `SensCroiss`.
 
@@ -105,9 +105,9 @@ Tous les sous-ensembles du dispositif doivent être conçus **uniquement** à pa
 
 ### 1.6 Plan de travail
 
-| Phase | Contenu |
-|---|---|
-| **Phase 1** | Conception et simulation comportementale complète du dispositif. Câblage d'une maquette et configuration d'un CPLD intégrant l'ensemble des fonctions numériques. Test du circuit pour validation. |
+| Phase       | Contenu                                                                                                                                                                                                               |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 1** | Conception et simulation comportementale complète du dispositif. Câblage d'une maquette et configuration d'un CPLD intégrant l'ensemble des fonctions numériques. Test du circuit pour validation.                    |
 | **Phase 2** | Reprise de l'étude en vue d'une optimisation. Finalisation d'un circuit imprimé mettant en œuvre le CPLD, avec comparaison des performances à l'étude précédente (réduction de la consommation et de l'encombrement). |
 
 Le cahier des charges demande de traiter, dans l'ordre, les **5 points** suivants — détaillés section par section ci-dessous :
@@ -126,20 +126,21 @@ Le cahier des charges demande de traiter, dans l'ordre, les **5 points** suivant
 
 Le comportement du séquenceur est modélisé par une **machine d'états finis synchrone** comportant quatre états principaux :
 
-| État | Description |
-|---|---|
-| **ATTENTE** | Au repos, initialise le compteur et attend l'activation de la fenêtre `Mesure`. |
+| État           | Description                                                                                                                                        |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ATTENTE**    | Au repos, initialise le compteur et attend l'activation de la fenêtre `Mesure`.                                                                    |
 | **DECOMPTAGE** | Dès que `Mesure` passe à l'état haut, le compteur décrémente à chaque front d'horloge. Si l'état zéro est atteint, la machine bascule en comptage. |
-| **COMPTAGE** | Le compteur repart à la hausse pour mesurer l'écart positif restant. |
-| **SAUVEGARDE** | À la fin de la fenêtre de mesure, le résultat est figé dans le registre avant de retourner à l'état `ATTENTE`. |
+| **COMPTAGE**   | Le compteur repart à la hausse pour mesurer l'écart positif restant.                                                                               |
+| **SAUVEGARDE** | À la fin de la fenêtre de mesure, le résultat est figé dans le registre avant de retourner à l'état `ATTENTE`.                                     |
 
 <p align="center">
-  <img src="images/Sequenc.png" alt="Graphe d'états du séquenceur" width="500"/>
+  <img src="img/Sequenc.png" alt="Graphe d'états du séquenceur" width="500"/>
 </p>
 
 ### 2.2 ✅ Synthèse et schéma de réalisation du séquenceur
 
 L'implémentation matérielle en VHDL sépare strictement :
+
 - la **logique séquentielle**, synchronisée sur le front montant de l'horloge `i_freq_ref` ;
 - la **logique combinatoire**, via un bloc `case` avec des valeurs par défaut pour éviter les latches parasites.
 
@@ -230,7 +231,7 @@ end architecture rtl;
 Le comportement dynamique du circuit a été validé par **simulation comportementale sous ModelSim**.
 
 <p align="center">
-  <img src="images/ModelSim.png" alt="Chronogramme de simulation ModelSim du séquenceur" width="700"/>
+  <img src="img/ModelSim.png" alt="Chronogramme de simulation ModelSim du séquenceur" width="700"/>
 </p>
 
 - 🟦 Le signal de reset asynchrone `i_rst_n` (en haut, cyan) initialise proprement le système dans l'état `ATTENTE`.
@@ -246,7 +247,7 @@ Le comportement dynamique du circuit a été validé par **simulation comporteme
 
 Rappel du besoin (cahier des charges) : le diviseur doit générer, de façon périodique et permanente, le signal `Mesure` à partir de l'horloge formée par `FreqVar`. `Mesure` doit être actif pendant exactement 100 périodes de cette horloge, et inactif pendant un nombre quelconque (à fixer librement) de périodes.
 
-> *À faire : proposer un schéma de réalisation à base de compteurs intégrés / bascules D / portes NAND, et documenter la démarche de conception ici.*
+> _À faire : proposer un schéma de réalisation à base de compteurs intégrés / bascules D / portes NAND, et documenter la démarche de conception ici._
 
 ### 2.4 ⏳ Schéma du compteur réversible
 
@@ -267,7 +268,7 @@ Sinon
         L'état du compteur est maintenu inchangé
 ```
 
-> *À faire : proposer un schéma de réalisation et documenter la démarche de conception ici.*
+> _À faire : proposer un schéma de réalisation et documenter la démarche de conception ici._
 
 ### 2.5 ⏳ Schéma du registre
 
@@ -282,4 +283,5 @@ Sinon
     Le contenu du registre n'est pas modifié
 ```
 
-> *À faire : proposer un schéma de réalisation et documenter la démarche de conception ici.*
+> _À faire : proposer un schéma de réalisation et documenter la démarche de conception ici._
+

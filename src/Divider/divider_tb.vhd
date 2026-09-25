@@ -7,7 +7,7 @@ end entity divider_tb;
 
 architecture tb of divider_tb is
 
-    signal i_reset : std_logic; 
+    signal i_reset_n : std_logic; 
     signal i_freqVar : std_logic;
 
     signal o_measure : std_logic := '0';
@@ -20,7 +20,7 @@ architecture tb of divider_tb is
 begin 
     uut : entity work.divider
         port map (
-            i_reset => i_reset,
+            i_reset_n => i_reset,
             i_freqVar => i_freqVar,
 
             o_measure => o_measure,
@@ -35,17 +35,17 @@ begin
         i_freqVar <= '0';
         wait for 4500 ns;
 
-        if done then 
+        if done then
             wait;
         end if;
     end process clock;
 
     gate : process
     begin
-        i_reset <= '0';
+        i_reset_n <= '0';
         wait until (rising_edge(i_freqVar));
 
-        i_reset <= '1';
+        i_reset_n <= '1';
         wait until (rising_edge(i_freqVar));
 
         for i in 0 to 105 loop

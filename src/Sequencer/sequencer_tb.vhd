@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity sequenceur_tb is
-end entity sequenceur_tb;
+entity sequencer_tb is
+end entity sequencer_tb;
 
-architecture tb of sequenceur_tb is
+architecture tb of sequencer_tb is
     -- Signaux de test interconnectés au composant
     signal tb_freq_ref    : std_logic := '0';
     signal tb_rst_n       : std_logic := '0';

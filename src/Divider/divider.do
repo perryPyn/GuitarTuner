@@ -9,7 +9,7 @@ vsim -c work.divider_tb
 
 # INPUTS
 add wave -divider Inputs:
-add wave -color yellow uut/i_reset
+add wave -color yellow uut/i_reset_n
 add wave -color red uut/i_freqVar
 add wave -color blue uut/r_count
 

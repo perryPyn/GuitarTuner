@@ -21,13 +21,13 @@ begin
     -- Instanciation du composant sous test (UUT)
     uut: entity work.registre
         port map (
-            clk       => tb_clk,
-            rst_n     => tb_rst_n,
-            charg_reg => tb_charg_reg,
-            sens_in   => tb_sens_in,
-            val_in    => tb_val_in,
-            sens_out  => tb_sens_out,
-            val_out   => tb_val_out
+            i_clk       => tb_clk,
+            i_rst_n     => tb_rst_n,
+            i_charg_reg => tb_charg_reg,
+            i_sens_crois   => tb_sens_in,
+            i_data => tb_val_in,
+            o_sens_crois  => tb_sens_out,
+            o_data   => tb_val_out
         );
 
     -- Génération de l'horloge
