@@ -2,11 +2,11 @@ quit -sim
 vlib work
 
 # Compilation des fichiers VHDL
-vcom sequenceur.vhd
-vcom sequenceur_tb.vhd
+vcom sequencer.vhd
+vcom sequencer_tb.vhd
 
 # Lancement de la simulation
-vsim -c work.sequenceur_tb
+vsim -c work.sequencer_tb
 
 # Ajout et organisation des signaux dans la fenêtre Wave
 add wave -divider Entrees:
