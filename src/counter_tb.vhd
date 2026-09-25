@@ -6,15 +6,15 @@ end entity counter_tb;
 
 architecture tb of counter_tb is
   -- Reset
-    signal i_rst_n : std_logic;
+    signal i_rst_n : std_logic := '0';
   -- Inputs
-    signal i_init_cnt : std_logic;
-    signal i_valid_cnt : std_logic;
-    signal i_sens_crois : std_logic;
-    signal i_freq_ref : std_logic;
+    signal i_init_cnt : std_logic := '0';
+    signal i_valid_cnt : std_logic := '0';
+    signal i_sens_crois : std_logic := '0';
+    signal i_freq_ref : std_logic := '0';
   -- Outputs
     signal o_data : std_logic_vector(3 downto 0);
-    signal o_etat_0 : std_logic;
+    signal o_etat_0 : std_logic := '0';
   -- Clock
     signal isDone : boolean := false;
 
@@ -39,11 +39,6 @@ begin
       i_freq_ref <= '0';
       wait for 4500 ns;
 
-      -- Simulate sequencor
-      if (o_etat_0 = '1') then
-        i_sens_crois <= '0';
-      end if;
-
       if (isDone) then
         wait;
       end if;
@@ -51,7 +46,7 @@ begin
   
     process
     begin
-      i_sens_crois <= '0';
+      -- i_sens_crois <= '0';
       i_rst_n <= '0';
       wait until rising_edge(i_freq_ref);
       i_rst_n <= '1';
@@ -67,9 +62,12 @@ begin
       wait until rising_edge(i_freq_ref);
 
       i_sens_crois <= '0';
-      wait until rising_edge(i_freq_ref);
+
+      wait until o_etat_0 = '1'; -- Simulate sequencer response
+      i_sens_crois <= '1';       -- Should be one clock tick away ??
+                                 -- issue with changement of state at '1' instead of '0'
  
-      for i in 0 to 200 loop
+      for i in 0 to 8 loop
           wait until rising_edge(i_freq_ref);
       end loop;
 
