@@ -1,0 +1,94 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/LINA/Desktop/MesProjets/GuitarTuner/src/Register
+Eregistre
+Z1 w1790090460
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 2
+R0
+Z4 8registre.vhd
+Z5 Fregistre.vhd
+l0
+L4 1
+V:nIU:lI9Q7NHFAZT8@h]?1
+!s100 >Z[1i5E9ZaZVL7kld8X_:2
+Z6 OV;C;2020.1;71
+31
+Z7 !s110 1790090671
+!i10b 1
+Z8 !s108 1790090671.000000
+Z9 !s90 -reportprogress|300|-93|registre.vhd|
+Z10 !s107 registre.vhd|
+!i113 1
+o-93
+Z11 tExplicit 1 CvgOpt 0
+Artl
+R2
+R3
+Z12 DEx4 work 8 registre 0 22 :nIU:lI9Q7NHFAZT8@h]?1
+!i122 2
+l17
+L16 15
+VaB<EHC>aLHkMmn@3Ja64I1
+!s100 fEk>l_8I0MbkcC=4COmTI2
+R6
+31
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+o-93
+R11
+Eregistre_tb
+Z13 w1790090461
+R2
+R3
+!i122 3
+R0
+Z14 8registre_tb.vhd
+Z15 Fregistre_tb.vhd
+l0
+L4 1
+VPTM<zU>a[WMl>k><DOJ;=3
+!s100 ^^Z2?026Zn^RVWnG2<0Ve3
+R6
+31
+R7
+!i10b 1
+R8
+Z16 !s90 -reportprogress|300|-93|registre_tb.vhd|
+Z17 !s107 registre_tb.vhd|
+!i113 1
+o-93
+R11
+Atb
+R12
+R2
+R3
+Z18 DEx4 work 11 registre_tb 0 22 PTM<zU>a[WMl>k><DOJ;=3
+!i122 3
+l20
+Z19 L7 77
+Z20 V[BBdK4L4Y0BG^4TOeN=Zn1
+Z21 !s100 HTaiG<7l?]mTfLi4X8=9T0
+R6
+31
+R7
+!i10b 1
+R8
+R16
+R17
+!i113 1
+o-93
+R11
