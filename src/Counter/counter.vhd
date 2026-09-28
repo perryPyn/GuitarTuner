@@ -7,10 +7,10 @@ entity counter is
   -- Reset
     i_rst_n : in std_logic;
   -- Inputs
+    i_freq_ref : in std_logic;
     i_init_cnt : in std_logic;
     i_valid_cnt : in std_logic;
     i_sens_crois : in std_logic;
-    i_freq_ref : in std_logic;
   -- Outputs
     o_etat_0 : out std_logic;
     o_data : out std_logic_vector(3 downto 0)

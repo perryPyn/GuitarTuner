@@ -46,7 +46,6 @@ begin
   
     process
     begin
-      -- i_sens_crois <= '0';
       i_rst_n <= '0';
       wait until rising_edge(i_freq_ref);
       i_rst_n <= '1';

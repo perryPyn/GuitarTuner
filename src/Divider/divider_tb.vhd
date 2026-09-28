@@ -12,7 +12,6 @@ architecture tb of divider_tb is
 
     signal o_measure : std_logic := '0';
     
-    signal r_count : integer := 0;
 
     signal done : BOOLEAN := false ;
 
@@ -20,12 +19,10 @@ architecture tb of divider_tb is
 begin 
     uut : entity work.divider
         port map (
-            i_reset_n => i_reset,
+            i_reset_n => i_reset_n,
             i_freqVar => i_freqVar,
 
-            o_measure => o_measure,
-
-            r_count => r_count
+            o_measure => o_measure
         );
 
     clock : process 

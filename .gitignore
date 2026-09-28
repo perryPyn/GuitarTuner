@@ -434,3 +434,5 @@ FodyWeavers.xsd
 # Modelsim
 src/**/work/
 vsim.wlf
+transcript
+*.vstf
