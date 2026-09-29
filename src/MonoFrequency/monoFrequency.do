@@ -31,16 +31,16 @@ add wave -color orange uut/u_divider/o_measure
 
 # COUNTER
 add wave -divider Counter:
-add wave -color yellow uut/u_counter/i_valid_cnt
-add wave -color yellow uut/u_counter/i_sens_crois
+# add wave -color yellow uut/u_counter/i_valid_cnt
+# add wave -color yellow uut/u_counter/i_sens_crois
 add wave -color red uut/u_counter/r_cnt
 add wave -color red uut/u_counter/o_data
 add wave -color red uut/u_counter/o_etat_0
 
 # SEQUENCER
 add wave -divider Sequencer:
-add wave -color yellow   uut/u_sequencer/i_mesure
-add wave -color yellow   uut/u_sequencer/i_etat_0
+# add wave -color yellow   uut/u_sequencer/i_mesure
+# add wave -color yellow   uut/u_sequencer/i_etat_0
 add wave -color orange    uut/u_sequencer/o_init_compt
 add wave -color orange    uut/u_sequencer/o_valid_compt
 add wave -color orange    uut/u_sequencer/o_sens_crois
@@ -49,9 +49,9 @@ add wave -color cyan   uut/u_sequencer/current_state
 
 # REGISTER
 add wave -divider Register:
-add wave -color yellow uut/u_register/i_charg_reg
-add wave -color yellow uut/u_register/i_sens_crois
-add wave -color yellow uut/u_register/i_data
+# add wave -color yellow uut/u_register/i_charg_reg
+# add wave -color yellow uut/u_register/i_sens_crois
+# add wave -color yellow uut/u_register/i_data
 add wave -color orange uut/u_register/o_sens_crois
 add wave -color red uut/u_register/o_data
 

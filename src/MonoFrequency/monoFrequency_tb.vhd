@@ -7,7 +7,7 @@ end entity monoFrequency_tb;
 architecture tb of monoFrequency_tb is
   -- Contants
     constant c_freq_ref : natural := 110;
-    constant c_freq_error : integer := -3;
+    constant c_freq_error : integer := 0;
     constant c_half_period_ref : time := 1 sec / (2 * c_freq_ref);
     constant c_half_period_var : time := c_half_period_ref * 100 / (100 + c_freq_error);
   -- Inputs

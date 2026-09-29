@@ -19,40 +19,44 @@ end entity counter;
 
 architecture rtl of counter is
 
-    -- constant h_max : signed := 100;
-    -- constant h_min : signed := 0;
-  signal r_cnt : integer range 0 to 100; -- Should use constant for boundaries or usless ?
-
 begin
 
   process (i_freq_ref, i_rst_n)
+
+  variable r_cnt : integer range 0 to 100;
+
   begin
 
     if (i_rst_n = '0') then
       o_etat_0 <= '0';
-      r_cnt <= 0;
+      r_cnt := 0;
 
-    elsif (rising_edge(i_freq_ref)) then
-      if (i_init_cnt = '1') then
-        o_etat_0 <= '0';
-        r_cnt <= 100;
+    else
+      if (rising_edge(i_freq_ref)) then
 
-      elsif (i_valid_cnt = '1') then
-        if (i_sens_crois = '1') then
-          r_cnt <= r_cnt + 1; -- Should be limited to avoid numbers above 100 ?
+        if (i_init_cnt = '1') then
+          o_etat_0 <= '0';
+          r_cnt := 100;
 
-        else
-          r_cnt <= r_cnt - 1; -- Should be limited to avoid negatives numbers ?
+        elsif (i_valid_cnt = '1') then
+          if (i_sens_crois = '1') then
+            r_cnt := r_cnt + 1; -- Should be limited to avoid numbers above 100 ?
 
-          if (r_cnt = 1) then
-            o_etat_0 <= '1';
+          else
+            r_cnt := r_cnt - 1; -- Should be limited to avoid negatives numbers ?
+
           end if;
-
         end if;
+      end if;
+
+      if (r_cnt = 0) then
+        o_etat_0 <= '1';
 
       end if;
 
     end if;
+
+
   end process;
 
   o_data <= std_logic_vector(to_unsigned(r_cnt, 4)); -- In C, would have put it in the loop to avoid useless

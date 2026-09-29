@@ -27,15 +27,15 @@ architecture rtl of sequencer is
     signal current_state, next_state : state_type;
 
 --PART1--
-      
-    begin                         
+
+    begin
         process(i_freq_ref, i_rst_n)           --In this part we implemented a reset so that we can force the system to be
         begin                                  --in the ATTENTE state or else to wait for a signal (i_freq_ref)
             if i_rst_n = '0' then
                 current_state <= ATTENTE;
             elsif rising_edge(i_freq_ref) then 
                 current_state <= next_state;
-                end if;
+            end if;
         end process;
 
 --PART2--
