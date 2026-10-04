@@ -33,7 +33,7 @@ add wave -color orange uut/u_divider/o_measure
 add wave -divider Counter:
 # add wave -color yellow uut/u_counter/i_valid_cnt
 # add wave -color yellow uut/u_counter/i_sens_crois
-add wave -color red uut/u_counter/r_cnt
+# add wave -color red uut/u_counter/r_cnt
 add wave -color red uut/u_counter/o_data
 add wave -color red uut/u_counter/o_etat_0
 

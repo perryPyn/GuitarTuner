@@ -21,15 +21,15 @@ architecture rtl of counter is
 
 begin
 
-  process (i_freq_ref, i_rst_n)
+  p_counter: process (i_freq_ref, i_rst_n)
 
-  variable r_cnt : integer range 0 to 100;
+  variable r_cnt : natural range 0 to 100 := 0;
 
   begin
 
     if (i_rst_n = '0') then
       o_etat_0 <= '0';
-      r_cnt := 0;
+      r_cnt := 100;
 
     else
       if (rising_edge(i_freq_ref)) then
@@ -49,17 +49,15 @@ begin
         end if;
       end if;
 
-      if (r_cnt = 0) then
-        o_etat_0 <= '1';
-
-      end if;
-
     end if;
 
-
-  end process;
+      if (r_cnt = 0) then
+        o_etat_0 <= '1';
+      end if;
 
   o_data <= std_logic_vector(to_unsigned(r_cnt, 4)); -- In C, would have put it in the loop to avoid useless
-                                                     -- updates, but here it's in parallele (so no need) ?
+  -- On devrait utiliser la valeur de i_sens_crois_n, permettrait de réguler l'erreur de 1 pendant le décomptage et pas dans le comptage
+
+  end process p_counter;
 
 end architecture rtl;
