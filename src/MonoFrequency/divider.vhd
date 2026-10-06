@@ -14,25 +14,27 @@ end divider;
 
 architecture rtl of divider is
 
-  signal r_count : natural range 0 to 100 := 0;
+  signal s_isDone : boolean := false;
+  signal s_count : natural range 0 to 100 := 0;
 
-begin 
+begin
   p_divider: process(i_freq_var, i_rst_n)
 
   begin
-    if (i_rst_n ='0') then
+    if (i_rst_n = '0') then
+      s_isDone <= false;
       o_measure <= '0';
-      r_count <= 0;
+      s_count <= 0;
 
+    elsif s_isDone then
     elsif (rising_edge(i_freq_var)) then
-      if (r_count = 100) then
-        r_count <= 0;
+      if (s_count = 100) then
+        s_isDone <= true;
+        s_count <= 0;
         o_measure <= '0';
-
       else
-        r_count <= r_count + 1;
+        s_count <= s_count + 1;
         o_measure <= '1';
-
       end if;
     end if;
 

@@ -20,7 +20,8 @@ begin
         if (i_rst_n = '0') then
             o_sens_crois <= '0';
             o_data  <= (others => '0');
-        elsif rising_edge(i_freq_ref) then
+        -- elsif rising_edge(i_freq_ref) then
+        elsif falling_edge(i_freq_ref) then
             if (i_charg_reg = '1') then
                 o_sens_crois <= i_sens_crois;
                 o_data  <= i_data;

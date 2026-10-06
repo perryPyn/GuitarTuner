@@ -58,11 +58,12 @@ begin
       when attente =>
 
         o_init_compt <= '1';
+        o_sens_crois  <= '0';
 
         if (i_mesure = '1') then
+          o_init_compt <= '0';
           o_valid_compt <= '1';
-          o_sens_crois  <= '0';
-          next_state    <= decomptage;
+          next_state <= decomptage;
         end if;
 
       -- État 2 : Le compteur décompte pendant que la mesure est active
@@ -71,13 +72,15 @@ begin
         o_valid_compt <= '1';
         o_sens_crois  <= '0';           -- Sens décrémentation
 
+        -- IF séparés nécessaires pour éviter un d'écalage d'horloge (1 pour le changement de signe, 1 pour l'arrêt de la mesure)
+        if (i_etat_0 = '1') then
+          o_sens_crois <= '1';          -- Seul moyen d'éviter le cycle d'horloge de décalage
+          next_state   <= comptage;
+        end if;
+
         if (i_mesure = '0') then
-          o_valid_compt <= '0';
-          next_state    <= sauvegarde;
-        elsif (i_etat_0 = '1') then
-          o_valid_compt <= '1';
-          o_sens_crois  <= '1';         -- Seul moyen d'éviter le cycle d'horloge de décalage
-          next_state    <= comptage;
+          o_valid_compt <= '0'; -- osef
+          next_state <= sauvegarde;
         end if;
 
       -- État 3 : Si l'état 0 est atteint, on compte à l'envers (croissant)
@@ -87,14 +90,15 @@ begin
         o_sens_crois  <= '1';           -- Sens incrémentation
 
         if (i_mesure = '0') then
-          o_valid_compt <= '1';
-          next_state    <= sauvegarde;
+          o_valid_compt <= '0'; -- osef
+          next_state <= sauvegarde;
         end if;
 
       -- État 4 : La mesure est finie, on sauvegarde le résultat dans le registre
       when sauvegarde =>
 
-        o_charg_reg <= '1';
+        o_charg_reg   <= '1';
+        o_valid_compt <= '0';
         -- o_init_compt <= '1';
         next_state <= attente;
 

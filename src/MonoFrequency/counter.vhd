@@ -19,45 +19,41 @@ end entity counter;
 
 architecture rtl of counter is
 
+  signal s_cnt : natural range 0 to 100 := 0;
+
 begin
 
   p_counter: process (i_freq_ref, i_rst_n)
-
-  variable r_cnt : natural range 0 to 100 := 0;
 
   begin
 
     if (i_rst_n = '0') then
       o_etat_0 <= '0';
-      r_cnt := 100;
-
+      s_cnt <= 100;
+--lucas reflechis bon dieu on va jamais y arriver sinon je suis malade bouffon va va te faire allumer 
     else
-      if (rising_edge(i_freq_ref)) then
+      if (i_init_cnt = '1') then
+        o_etat_0 <= '0';
+        s_cnt <= 100;
 
-        if (i_init_cnt = '1') then
-          o_etat_0 <= '0';
-          r_cnt := 100;
+      elsif (rising_edge(i_freq_ref)) and (i_valid_cnt = '1') then
+        if (i_sens_crois = '1') then
+          s_cnt <= s_cnt + 1; -- Should be limited to avoid numbers above 100 ?
 
-        elsif (i_valid_cnt = '1') then
-          if (i_sens_crois = '1') then
-            r_cnt := r_cnt + 1; -- Should be limited to avoid numbers above 100 ?
+        else
+          s_cnt <= s_cnt - 1; -- Should be limited to avoid negatives numbers ?
 
-          else
-            r_cnt := r_cnt - 1; -- Should be limited to avoid negatives numbers ?
-
-          end if;
         end if;
+      end if;
+
+      if (s_cnt = 0) then
+        o_etat_0 <= '1';
       end if;
 
     end if;
 
-      if (r_cnt = 0) then
-        o_etat_0 <= '1';
-      end if;
-
-  o_data <= std_logic_vector(to_unsigned(r_cnt, 4)); -- In C, would have put it in the loop to avoid useless
-  -- On devrait utiliser la valeur de i_sens_crois_n, permettrait de réguler l'erreur de 1 pendant le décomptage et pas dans le comptage
-
   end process p_counter;
+
+  o_data <= std_logic_vector(to_unsigned(s_cnt, 4));
 
 end architecture rtl;
