@@ -6,6 +6,7 @@ vcom counter.vhd
 vcom divider.vhd
 vcom registre.vhd
 vcom sequencer.vhd
+vcom decoder.vhd
 vcom monoFrequency.vhd
 vcom monoFrequency_tb.vhd
 
@@ -56,6 +57,10 @@ add wave -divider Register:
 add wave -color orange uut/u_register/o_sens_crois
 add wave -color red uut/u_register/o_data
 
+# DECODER
+# add wave -divider Decoder:
+add wave -color yellow uut/u_decoder/i_data
+add wave -color red uut/u_decoder/o_data
 
 run -all
 

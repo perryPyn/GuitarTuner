@@ -10,7 +10,7 @@ entity monoFrequency is
     i_freq_ref : in std_logic;
   -- Outputs
     o_sens_crois : out std_logic;
-    o_data  : out std_logic_vector(3 downto 0)
+    o_data  : out std_logic_vector(6 downto 0)
   );
 end entity monoFrequency;
 
@@ -22,7 +22,9 @@ architecture rtl of monoFrequency is
   signal s_valid_compt : std_logic;
   signal s_sens_crois : std_logic;
   signal s_charg_reg   : std_logic;
-  signal s_data : std_logic_vector(3 downto 0);
+  signal s_data_counter : std_logic_vector(3 downto 0);
+  signal s_data_register : std_logic_vector(3 downto 0);
+  -- signal s_data_7bits : std_logic_vector(7 downto 0);
 
 begin
   
@@ -55,7 +57,7 @@ begin
       i_valid_cnt => s_valid_compt,
       i_sens_crois => s_sens_crois,
       o_etat_0 => s_etat_0,
-      o_data => s_data
+      o_data => s_data_counter
              );
 
   u_register : entity work.registre
@@ -65,9 +67,18 @@ begin
 
       i_charg_reg => s_charg_reg,
       i_sens_crois => s_sens_crois,
-      i_data => s_data,
+      i_data => s_data_counter,
 
       o_sens_crois => o_sens_crois,
+      o_data => s_data_register
+             );
+
+  u_decoder : entity work.decoder
+    port map (
+      i_rst_n => i_rst_n,
+
+      i_data => s_data_register,
+
       o_data => o_data
              );
 

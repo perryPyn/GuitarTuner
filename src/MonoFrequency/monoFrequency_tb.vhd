@@ -7,7 +7,7 @@ end entity monoFrequency_tb;
 architecture tb of monoFrequency_tb is
   -- Contants
     constant c_freq_ref : natural := 110;
-    constant c_freq_error : integer := 1;
+    constant c_freq_error : integer := 0;
     constant c_half_period_ref : time := 1 sec / (2 * c_freq_ref);
     constant c_half_period_var : time := c_half_period_ref * 100 / (100 + c_freq_error);
   -- Inputs
@@ -16,7 +16,7 @@ architecture tb of monoFrequency_tb is
     signal i_freq_ref : std_logic;
   -- Outputs
     signal o_sens_crois : std_logic;
-    signal o_data  : std_logic_vector(3 downto 0);
+    signal o_data  : std_logic_vector(6 downto 0);
   -- Clock
     signal isDone : boolean := false;
 
