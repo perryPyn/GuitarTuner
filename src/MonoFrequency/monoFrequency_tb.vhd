@@ -5,15 +5,18 @@ entity monoFrequency_tb is
 end entity monoFrequency_tb;
 
 architecture tb of monoFrequency_tb is
-  -- Contants
+  -- Contants for generating var signal
     constant c_freq_ref : natural := 110;
     constant c_freq_error : integer := 0;
     constant c_half_period_ref : time := 1 sec / (2 * c_freq_ref);
     constant c_half_period_var : time := c_half_period_ref * 100 / (100 + c_freq_error);
+  -- Clock constant
+    constant c_freq_clk : natural := 25000000;
+    constant c_half_period_clk : time := 1 sec / (2 * c_freq_clk);
   -- Inputs
     signal i_rst_n : std_logic;
     signal i_freq_var : std_logic;
-    signal i_freq_ref : std_logic;
+    signal i_clk : std_logic;
   -- Outputs
     signal o_sens_crois : std_logic;
     signal o_data  : std_logic_vector(6 downto 0);
@@ -27,7 +30,7 @@ begin
     port map (
       i_rst_n => i_rst_n,
       i_freq_var => i_freq_var,
-      i_freq_ref => i_freq_ref,
+      i_clk => i_clk,
       o_sens_crois => o_sens_crois,
       o_data => o_data
              );
@@ -35,11 +38,11 @@ begin
 
     clock_ref: process -- Simulation du signal généré
     begin
-      i_freq_ref <= '0';
-      wait for c_half_period_ref;
+      i_clk <= '0';
+      wait for c_half_period_clk;
 
-      i_freq_ref <= '1';
-      wait for c_half_period_ref;
+      i_clk <= '1';
+      wait for c_half_period_clk;
 
       if (isDone) then
         wait;
@@ -62,14 +65,14 @@ begin
     stimuli: process
     begin
       i_rst_n <= '0';
-      wait until rising_edge(i_freq_ref);
+      wait for 9 ms;
 
       i_rst_n <= '1';
-      wait until rising_edge(i_freq_ref);
+      wait for 9 ms;
 
 
       for i in 0 to 120 loop
-        wait until rising_edge(i_freq_ref);
+        wait for 9 ms;
       end loop;
 
       isDone <= true;
