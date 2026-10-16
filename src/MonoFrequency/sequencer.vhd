@@ -57,7 +57,7 @@ begin
       -- État 1 : En attente du début de la mesure
       when attente =>
 
-        o_init_compt <= '1';
+        o_init_compt <= '0';
         o_sens_crois  <= '0';
 
         if (i_mesure = '1') then
@@ -99,7 +99,7 @@ begin
 
         o_charg_reg   <= '1';
         o_valid_compt <= '0';
-        -- o_init_compt <= '1';
+        o_init_compt <= '1';
         next_state <= attente;
 
       when others =>

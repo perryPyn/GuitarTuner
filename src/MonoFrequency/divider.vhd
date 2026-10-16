@@ -14,7 +14,8 @@ end divider;
 
 architecture rtl of divider is
 
-  signal s_isDone : boolean := false;
+  -- isDone is used for single run only, should be removed in final test
+  -- signal s_isDone : boolean := false;
   signal s_count : natural range 0 to 100 := 0;
 
 begin
@@ -22,14 +23,14 @@ begin
 
   begin
     if (i_rst_n = '0') then
-      s_isDone <= false;
+      -- s_isDone <= false;
       o_measure <= '0';
       s_count <= 0;
 
-    elsif s_isDone then
+    -- elsif s_isDone then
     elsif (rising_edge(i_freq_var)) then
       if (s_count = 100) then
-        s_isDone <= true;
+        -- s_isDone <= true;
         s_count <= 0;
         o_measure <= '0';
       else

@@ -83,10 +83,8 @@ begin
 
   u_decoder : entity work.decoder
     port map (
-      i_rst_n => i_rst_n,
-
+      -- i_rst_n => i_rst_n,
       i_data => s_data_register,
-
       o_data => o_data
              );
 

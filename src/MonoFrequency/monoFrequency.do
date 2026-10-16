@@ -16,7 +16,7 @@ vsim -c work.monoFrequency_tb
 # CLOCK
 add wave -divider Clock:
 add wave -color green uut/i_rst_n
-add wave -color green uut/i_clk
+# add wave -color green uut/i_clk
 add wave -color green uut/s_freq_ref
 
 # INPUTS
@@ -30,7 +30,7 @@ add wave -color red uut/o_sens_crois
 
 # DIVISER
 add wave -divider Diviser:
-add wave -color orange uut/u_divider/s_isDone
+# add wave -color orange uut/u_divider/s_isDone
 add wave -color orange uut/u_divider/o_measure
 
 # COUNTER
