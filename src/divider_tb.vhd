@@ -48,13 +48,12 @@ begin
         i_reset <= '1';
         wait until (rising_edge(i_freqVar));
 
-        for i in 0 to 105 loop
+        for i in 0 to 110 loop
             wait until (rising_edge(i_freqVar));
         end loop;
         
         done <= true; 
         wait;
-         
         
     end process gate;
 
