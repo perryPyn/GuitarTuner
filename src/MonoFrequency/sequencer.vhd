@@ -30,15 +30,22 @@ architecture rtl of sequencer is
 
 begin
 
-  p_sync : process (i_freq_ref, i_rst_n) is           -- In this part we implemented a reset so that we can force the system to be
-  begin                                  -- in the ATTENTE state or else to wait for a signal (i_freq_ref)
-
+p_sync : process (i_freq_ref, i_rst_n) is
+  begin
     if (i_rst_n = '0') then
       current_state <= attente;
+      o_sens_crois <= '0';
     elsif rising_edge(i_freq_ref) then
       current_state <= next_state;
+      
+      -- Mémorisation propre du sens de croisement via une bascule synchrone
+      if next_state = attente or next_state = decomptage then
+        o_sens_crois <= '0';
+      elsif next_state = comptage then
+        o_sens_crois <= '1';
+      end if;
+      -- En état "sauvegarde", la dernière valeur est automatiquement maintenue
     end if;
-
   end process p_sync;
 
   -- PART2--
@@ -58,7 +65,7 @@ begin
       when attente =>
 
         o_init_compt <= '0';
-        o_sens_crois  <= '0';
+        -- o_sens_crois  <= '0';
 
         if (i_mesure = '1') then
           o_init_compt <= '0';
@@ -70,11 +77,11 @@ begin
       when decomptage =>
 
         o_valid_compt <= '1';
-        o_sens_crois  <= '0';           -- Sens décrémentation
+        -- o_sens_crois  <= '0';           -- Sens décrémentation
 
         -- IF séparés nécessaires pour éviter un d'écalage d'horloge (1 pour le changement de signe, 1 pour l'arrêt de la mesure)
         if (i_etat_0 = '1') then
-          o_sens_crois <= '1';          -- Seul moyen d'éviter le cycle d'horloge de décalage
+          -- o_sens_crois <= '1';          -- Seul moyen d'éviter le cycle d'horloge de décalage
           next_state   <= comptage;
         end if;
 
@@ -87,7 +94,7 @@ begin
       when comptage =>
 
         o_valid_compt <= '1';
-        o_sens_crois  <= '1';           -- Sens incrémentation
+        -- o_sens_crois  <= '1';           -- Sens incrémentation
 
         if (i_mesure = '0') then
           o_valid_compt <= '0'; -- osef
