@@ -30,7 +30,7 @@ begin
     if (i_rst_n = '0') then
       o_etat_0 <= '0';
       s_cnt <= 100;
---lucas reflechis bon dieu on va jamais y arriver sinon je suis malade bouffon va va te faire allumer 
+    
     else
       if (i_init_cnt = '1') then
         o_etat_0 <= '0';
