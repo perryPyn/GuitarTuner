@@ -28,6 +28,6 @@ begin
             "1110000" when i_data = "0111" else
             "1111111" when i_data = "1000" else
             "1111011" when i_data = "1001" else
-            (others => '0');
+            "0110000";
 
 end architecture rtl;
