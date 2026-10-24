@@ -20,6 +20,7 @@ architecture tb of monoFrequency_tb is
   -- Outputs
     signal o_sens_crois : std_logic;
     signal o_data  : std_logic_vector(6 downto 0);
+    signal o_rst_n  : STD_LOGIC;
   -- Clock
     signal isDone : boolean := false;
 
@@ -28,7 +29,11 @@ begin
   uut : entity work.monoFrequency
 
     port map (
-      i_rst_n => i_rst_n,
+      o_led_mesure => OPEN,
+      o_led_clk => OPEN,
+      o_rst_n => o_rst_n,
+      o_an => OPEN,
+      i_rst => i_rst_n,
       i_freq_var => i_freq_var,
       i_clk => i_clk,
       o_sens_crois => o_sens_crois,
@@ -64,10 +69,12 @@ begin
 
     stimuli: process
     begin
-      i_rst_n <= '0';
-      wait for 9 ms;
+      -- i_freq_var <= '0';
 
       i_rst_n <= '1';
+      wait for 9 ms;
+
+      i_rst_n <= '0';
       wait for 9 ms;
 
 

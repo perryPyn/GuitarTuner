@@ -7,7 +7,8 @@ entity counter is
   -- Reset
     i_rst_n : in std_logic;
   -- Inputs
-    i_freq_ref : in std_logic;
+    i_clk : in std_logic;
+    i_en : in std_logic;
     i_init_cnt : in std_logic;
     i_valid_cnt : in std_logic;
     i_sens_crois : in std_logic;
@@ -19,29 +20,38 @@ end entity counter;
 
 architecture rtl of counter is
   signal s_cnt : natural range 0 to 100 := 0;
+  signal s_prev_en : STD_LOGIC;
 begin
 
-  p_counter: process (i_freq_ref, i_rst_n)
+  p_counter: process (i_clk, i_en, i_rst_n)
   begin
     if (i_rst_n = '0') then
       s_cnt <= 100;
-    elsif rising_edge(i_freq_ref) then
-      -- Priorité à l'initialisation synchrone
-      if (i_init_cnt = '1') then
-        s_cnt <= 100;
-      elsif (i_valid_cnt = '1') then
-        if (i_sens_crois = '1') then
-          if s_cnt < 100 then s_cnt <= s_cnt + 1; end if; -- Limite haute
-        else
-          if s_cnt > 0 then s_cnt <= s_cnt - 1; end if;   -- Limite basse
+
+    elsif rising_edge(i_clk) then
+      s_prev_en <= i_en; -- C'est un signal donc sera update qu'à la fin du process
+      if (i_en = '1') and (s_prev_en = '0') then -- on fait une sorte de petit détecteur de front montant
+        -- Priorité à l'initialisation synchrone
+        if (i_init_cnt = '1') then
+          s_cnt <= 100;
+
+        elsif (i_valid_cnt = '1') then
+          if (i_sens_crois = '1') then
+          -- Les limites ne devrait être atteintes mais déjà par sécurité
+          -- C'est surtout que les mesures affichées seront entre +/- 9 donc devrait rien changer si le vecteur est tronqué
+            if s_cnt < 100 then s_cnt <= s_cnt + 1; end if; -- Limite haute
+          else
+            if s_cnt > 0 then s_cnt <= s_cnt - 1; end if;   -- Limite basse
+
+          end if;
         end if;
       end if;
     end if;
   end process p_counter;
 
-  -- Assigne o_etat_0 de manière continue et sans latch
+  -- Évite les latch
   o_etat_0 <= '1' when (s_cnt = 0) else '0';
-  
+
   o_data <= std_logic_vector(to_unsigned(s_cnt, 4));
 
 end architecture rtl;

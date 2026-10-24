@@ -1,33 +1,46 @@
 library ieee;
   use ieee.std_logic_1164.all;
 
+-- Codes d'erreur (cf. decoder.vhd) :
+--   "1111" -> "r" : reset appliquÈ
+--   "1110" -> "C" : probqblement pqs de signql en entrÈe (pÈriode infinie)
+--   "0000".."1001" : Ècart mesurÈ en %
+
 entity registre is
   port (
-    i_freq_ref   : in    std_logic;                    -- Horloge (FreqRef)
-    i_rst_n      : in    std_logic;                    -- Reset asynchrone actif bas
-    i_charg_reg  : in    std_logic;                    -- Signal de commande (ChargReg)
-    i_sens_crois : in    std_logic;                    -- Entr√©e du sens (SensCroiss)
-    i_data       : in    std_logic_vector(3 downto 0); -- Entr√©e des 4 bits de donn√©es
-    o_sens_crois : out   std_logic;                    -- Sortie m√©moris√©e du sens
-    o_data       : out   std_logic_vector(3 downto 0)  -- Sortie m√©moris√©e des 4 bits
+    i_clk        : in    std_logic;
+    i_en         : in    std_logic;
+    i_rst_n      : in    std_logic;
+    i_charg_reg  : in    std_logic;
+    i_sens_crois : in    std_logic;
+    i_data       : in    std_logic_vector(3 downto 0);
+    o_sens_crois : out   std_logic;
+    o_data       : out   std_logic_vector(3 downto 0)
   );
 end entity registre;
 
 architecture rtl of registre is
 
+  signal r_loaded : std_logic;
+
 begin
 
-  p_registre : process (i_freq_ref, i_rst_n) is
+  p_registre : process (i_clk, i_en, i_rst_n) is
   begin
 
     if (i_rst_n = '0') then
       o_sens_crois <= '0';
-      o_data       <= (others => '0');
-    -- elsif rising_edge(i_freq_ref) then
-    elsif falling_edge(i_freq_ref) then
-      if (i_charg_reg = '1') then
-        o_sens_crois <= i_sens_crois;
-        o_data       <= i_data;
+      o_data       <= "1111";               -- "r"
+      r_loaded     <= '0';
+    elsif rising_edge(i_clk) then
+      if (i_en = '1') then
+        if (i_charg_reg = '1') then
+          o_sens_crois <= i_sens_crois;
+          o_data       <= i_data;
+          r_loaded     <= '1';
+        elsif (r_loaded = '0') then
+          o_data <= "1110";                 -- "C" : horloge dÈtectÈe
+        end if;
       end if;
     end if;
 

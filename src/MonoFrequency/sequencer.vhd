@@ -5,10 +5,11 @@ library ieee;
 entity sequencer is
   port (
     -- Inputs
-    i_freq_ref : in    std_logic;
-    i_rst_n    : in    std_logic;
-    i_mesure   : in    std_logic;
-    i_etat_0   : in    std_logic;
+    i_clk    : in    std_logic;
+    i_en     : in    std_logic;
+    i_rst_n  : in    std_logic;
+    i_mesure : in    std_logic;
+    i_etat_0 : in    std_logic;
     -- Outputs
     o_init_compt  : out   std_logic;
     o_valid_compt : out   std_logic;
@@ -22,7 +23,7 @@ architecture rtl of sequencer is
   -- We have to define first the states of the machine (for the sequencer the states are
   -- attente, decomptage, comptage, sauvegarde)
 
-  type state_type is (attente, decomptage, comptage, sauvegarde);
+  type state_type is (rst, attente, decomptage, comptage, sauvegarde);
 
   signal current_state, next_state : state_type;
 
@@ -30,22 +31,26 @@ architecture rtl of sequencer is
 
 begin
 
-p_sync : process (i_freq_ref, i_rst_n) is
+  p_sync : process (i_clk, i_en, i_rst_n) is
   begin
+
     if (i_rst_n = '0') then
-      current_state <= attente;
-      o_sens_crois <= '0';
-    elsif rising_edge(i_freq_ref) then
-      current_state <= next_state;
-      
-      -- Mémorisation propre du sens de croisement via une bascule synchrone
-      if next_state = attente or next_state = decomptage then
-        o_sens_crois <= '0';
-      elsif next_state = comptage then
-        o_sens_crois <= '1';
-      end if;
+      current_state <= rst;
+      o_sens_crois  <= '0';
+    elsif rising_edge(i_clk) then
+      if (i_en = '1') then
+        current_state <= next_state;
+
+        -- Mémorisation propre du sens de croisement via une bascule synchrone
+        if (next_state = attente or next_state = decomptage) then
+          o_sens_crois <= '0';
+        elsif (next_state = comptage) then
+          o_sens_crois <= '1';
+        end if;
       -- En état "sauvegarde", la dernière valeur est automatiquement maintenue
+      end if;
     end if;
+
   end process p_sync;
 
   -- PART2--
@@ -68,9 +73,9 @@ p_sync : process (i_freq_ref, i_rst_n) is
         -- o_sens_crois  <= '0';
 
         if (i_mesure = '1') then
-          o_init_compt <= '0';
+          o_init_compt  <= '0';
           o_valid_compt <= '1';
-          next_state <= decomptage;
+          next_state    <= decomptage;
         end if;
 
       -- État 2 : Le compteur décompte pendant que la mesure est active
@@ -82,12 +87,12 @@ p_sync : process (i_freq_ref, i_rst_n) is
         -- IF séparés nécessaires pour éviter un d'écalage d'horloge (1 pour le changement de signe, 1 pour l'arrêt de la mesure)
         if (i_etat_0 = '1') then
           -- o_sens_crois <= '1';          -- Seul moyen d'éviter le cycle d'horloge de décalage
-          next_state   <= comptage;
+          next_state <= comptage;
         end if;
 
         if (i_mesure = '0') then
-          o_valid_compt <= '0'; -- osef
-          next_state <= sauvegarde;
+          o_valid_compt <= '0';        -- osef
+          next_state    <= sauvegarde;
         end if;
 
       -- État 3 : Si l'état 0 est atteint, on compte à l'envers (croissant)
@@ -97,8 +102,8 @@ p_sync : process (i_freq_ref, i_rst_n) is
         -- o_sens_crois  <= '1';           -- Sens incrémentation
 
         if (i_mesure = '0') then
-          o_valid_compt <= '0'; -- osef
-          next_state <= sauvegarde;
+          o_valid_compt <= '0';        -- osef
+          next_state    <= sauvegarde;
         end if;
 
       -- État 4 : La mesure est finie, on sauvegarde le résultat dans le registre
@@ -106,8 +111,8 @@ p_sync : process (i_freq_ref, i_rst_n) is
 
         o_charg_reg   <= '1';
         o_valid_compt <= '0';
-        o_init_compt <= '1';
-        next_state <= attente;
+        o_init_compt  <= '1';
+        next_state    <= attente;
 
       when others =>
 
