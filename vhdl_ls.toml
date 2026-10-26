@@ -1,2 +1,5 @@
-[libraries]
-work.files = ["*.vhd", "src/**/*.vhd"]
+[libraries.defaultlib]
+files = [
+  "rtl/**/*.vhd",
+  "sim/**/*.vhd"
+]
