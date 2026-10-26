@@ -2,14 +2,15 @@ quit -sim
 
 vlib work
 
-vcom clk-divider.vhd
-vcom counter.vhd
-vcom divider.vhd
-vcom registre.vhd
-vcom sequencer.vhd
-vcom decoder.vhd
-vcom monoFrequency.vhd
-vcom monoFrequency_tb.vhd
+vcom rtl/clk-divider.vhd
+vcom rtl/counter.vhd
+vcom rtl/divider.vhd
+vcom rtl/registre.vhd
+vcom rtl/sequencer.vhd
+vcom rtl/decoder.vhd
+vcom rtl/monoFrequency.vhd
+
+vcom sim/monoFrequency_tb.vhd
 
 vsim -c work.monoFrequency_tb
 

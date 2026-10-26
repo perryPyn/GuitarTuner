@@ -22,6 +22,7 @@ begin
     uut: entity work.registre
         port map (
             i_clk       => tb_clk,
+            i_en => tb_clk,
             i_rst_n     => tb_rst_n,
             i_charg_reg => tb_charg_reg,
             i_sens_crois   => tb_sens_in,

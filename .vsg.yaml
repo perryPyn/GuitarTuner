@@ -1,0 +1,13 @@
+rule:
+  # Désactive le contrôle imposant l'utilisation de 'component'
+  instantiation_034:
+    disable: True
+
+  # Désactive l'obligation de spécifier le nom d'architecture dans l'instanciation
+  instantiation_036:
+    disable: True
+
+rule_group:
+  # Enforce la casse en minuscules pour l'ensemble des mots-clés
+  case::keyword:
+    case: lower

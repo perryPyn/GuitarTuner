@@ -25,13 +25,14 @@ begin
     -- Instantiation du Séquenceur (UUT : Unit Under Test)
     uut: entity work.sequencer 
         port map (
-            i_freq_ref    => tb_freq_ref,
+            i_clk => tb_freq_ref,
+            i_en => tb_freq_ref,
             i_rst_n       => tb_rst_n,
             i_mesure      => tb_mesure,
             i_etat_0      => tb_etat_0,
             o_init_compt  => tb_init_compt,
             o_valid_compt => tb_valid_compt,
-            o_sens_croiss => tb_sens_croiss,
+            o_sens_crois => tb_sens_croiss,
             o_charg_reg   => tb_charg_reg
         );
 

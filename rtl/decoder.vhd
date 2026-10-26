@@ -29,8 +29,8 @@ begin
             "1111000" when i_data = "0111" else
             "0000000" when i_data = "1000" else
             "0010000" when i_data = "1001" else
-				"0101111" when i_data = "1111" else -- "r" : RESET State
-				"1000110" when i_data = "1110" else -- "C" : No clock rising_edge found
+            "0101111" when i_data = "1111" else -- "r" : RESET State
+            "1000110" when i_data = "1110" else -- "C" : No clock rising_edge found
             "0000110";
 
 end architecture rtl;

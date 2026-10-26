@@ -78,7 +78,7 @@ begin
       wait for 9 ms;
 
 
-      for i in 0 to 120 loop
+      for i in 0 to 300 loop
         wait for 9 ms;
       end loop;
 

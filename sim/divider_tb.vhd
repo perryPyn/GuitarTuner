@@ -19,8 +19,8 @@ architecture tb of divider_tb is
 begin 
     uut : entity work.divider
         port map (
-            i_reset_n => i_reset_n,
-            i_freqVar => i_freqVar,
+            i_rst_n => i_reset_n,
+            i_freq_var => i_freqVar,
 
             o_measure => o_measure
         );

@@ -26,7 +26,8 @@ begin
       i_init_cnt => i_init_cnt,
       i_valid_cnt => i_valid_cnt,
       i_sens_crois => i_sens_crois,
-      i_freq_ref => i_freq_ref,
+      i_en  => i_freq_ref,
+      i_clk => i_freq_ref,
 
       o_etat_0 => o_etat_0,
       o_data => o_data

@@ -1,5 +1,0 @@
-rule:
-  process_016:
-    disable: True
-  process_018:
-    disable: True
