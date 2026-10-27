@@ -43,3 +43,7 @@ J'ai résolu le problème pour le compteur avec une bascule D mais je me rends c
 
 ==Il faut ajouter des bascules D partout !?==
 
+> En fait la bonne manière de faire est de ne laisser le `enable` que sur une seule clock haute. Plus besoin d'ajouter des bascules à gogo :
+
+![état fonctionnel](../../assets/img/2026-10-27-09-28-34.png)
+
