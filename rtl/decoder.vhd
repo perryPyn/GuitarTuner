@@ -19,8 +19,7 @@ architecture rtl of decoder is
 
 begin
 
-  o_data <= "1000000" when i_data = "0000" else
-            "1111001" when i_data = "0001" else
+  o_data <= "1000000" when i_data = "0000" else "1111001" when i_data = "0001" else
             "0100100" when i_data = "0010" else
             "0110000" when i_data = "0011" else
             "0011001" when i_data = "0100" else

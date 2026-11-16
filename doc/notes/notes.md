@@ -47,3 +47,6 @@ J'ai résolu le problème pour le compteur avec une bascule D mais je me rends c
 
 ![état fonctionnel](../../assets/img/2026-10-27-09-28-34.png)
 
+## Simu
+
+![simu](./assets/simu.png)

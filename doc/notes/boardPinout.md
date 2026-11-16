@@ -6,7 +6,7 @@
 | ------------ | --- | -------- | ----------- |
 | i_clk        | M6  | LVCMOS33 | Clock       |
 | i_freq_var   | J3  | LVCMOS33 | I/O         |
-| i_rst_n      | A7  | LVCMOS33 | Push Button |
+| i_rst        | A7  | LVCMOS33 | Push Button |
 | o_an(0)      | F12 | LVCMOS33 | Display 0   |
 | o_an(1)      | J12 | LVCMOS33 | Display 0   |
 | o_an(2)      | M13 | LVCMOS33 | Display 0   |
@@ -18,6 +18,7 @@
 | o_data(4)    | P12 | LVCMOS33 | E           |
 | o_data(5)    | L13 | LVCMOS33 | F           |
 | o_data(6)    | M12 | LVCMOS33 | G           |
+| o_led_mesure | P7  | LVCMOS33 | LED         |
 | o_rst_n      | M11 | LVCMOS33 | LED         |
 | o_sens_crois | M5  | LVCMOS33 | LED         |
 
