@@ -15,12 +15,19 @@ entity monofrequency is
     o_led_clk    : out   std_logic; -- clignote si clock présente
     o_led_mesure : out   std_logic; -- ON lorsque mesure en cours
     -- Inputs
-    i_rst      : in    std_logic;
-    i_freq_var : in    std_logic;
-    i_clk      : in    std_logic;
+    i_rst        : in    std_logic;
+    i_freq_var   : in    std_logic;
+    i_clk        : in    std_logic;
+    i_resistance : in    std_logic;
     -- Outputs
     o_sens_crois : out   std_logic;
-    o_data       : out   std_logic_vector(6 downto 0)
+    o_data       : out   std_logic_vector(6 downto 0);
+    o_r_329      : out   std_logic;
+    o_r_246      : out   std_logic;
+    o_r_196      : out   std_logic;
+    o_r_146      : out   std_logic;
+    o_r_110      : out   std_logic;
+    o_r_82       : out   std_logic
   );
 end entity monofrequency;
 
@@ -39,6 +46,7 @@ architecture rtl of monofrequency is
   signal s_charg_reg     : std_logic;
   signal s_data_counter  : std_logic_vector(3 downto 0);
   signal s_data_register : std_logic_vector(3 downto 0);
+  signal s_sel           : std_logic_vector(2 downto 0);
 
 begin
 
@@ -59,6 +67,18 @@ begin
 
   o_led_clk    <= r_heartbeat(g_led_div);
   o_led_mesure <= s_measure;
+
+  u_mux_resistor : entity work.muxresistor
+    port map (
+      i_signal => i_resistance,
+      sel      => s_sel,
+      o_r_329  => o_r_329,
+      o_r_246  => o_r_246,
+      o_r_196  => o_r_196,
+      o_r_146  => o_r_146,
+      o_r_110  => o_r_110,
+      o_r_82   => o_r_82
+    );
 
   -- Instantiations
   u_clk_divider : entity work.clk_divider
